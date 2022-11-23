@@ -1,0 +1,58 @@
+Repeating
+Peace and Tranquility Slow
+Thought
+Ugh, why does my head hurt?
+Bubble
+NewEvidence
+Add Evidence
+2SwordEvidence
+2 Swords: The two swords found at the scene of the crime. One has blood only on the tip of the sword, likely the one that was stuck in the victim. The other is clean. Both look somewhat fancy.
+Add Evidence
+2SwordEvidence
+This should be the file with the CrimeScene
+Add Evidence
+Map
+Perhaps to suffer? I hope not
+Add Evidence
+PoliceReport
+Let see if your code works. 
+Add Evidence
+PoliceReport
+Baka!! You found me!! 
+Thought
+This message should be readable.
+Background
+DefenceBackground
+Character
+AttorneyShephard
+300
+250
+Character
+AssistantAlex
+100
+300
+Object
+DefenceDesk
+Shephard
+Hello There, I am the one and only.
+Thought
+Great, I think the greatness is getting to him
+Thought
+Hopefully, we can exit out of here soon.
+Background
+WitnessBackground
+Character
+JudasLee
+300
+300
+Bubble
+WitnessTestimony
+Testimony
+Lee
+I am the one and only one who can stop time. 
+Testimony
+Lee
+So do not stop me, Human, ok?
+Testimony
+Lee
+I love to kill everyone here, if I can
