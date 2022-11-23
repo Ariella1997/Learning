@@ -1,6 +1,6 @@
-PWD c:\Users\Bon-Bon\Documents\Ongoing\Ongoing
+PWD c:\Users\Bon-Bon\Documents\GitHub\Ongoing
 INPUT C:\Users\Bon-Bon\AppData\Local\MiKTeX\2.9\miktex\data\le\pdftex\pdflatex.fmt
-INPUT c:\Users\Bon-Bon\Documents\Ongoing\Ongoing\Tankfei.tex
+INPUT c:\Users\Bon-Bon\Documents\GitHub\Ongoing\Tankfei.tex
 OUTPUT Tankfei.log
 INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\article.cls
 INPUT C:\Program Files\MiKTeX 2.9\tex\latex\base\article.cls
