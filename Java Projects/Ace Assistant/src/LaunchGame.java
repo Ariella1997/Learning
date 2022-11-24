@@ -15,6 +15,7 @@ import java.io.File ;
 
 public class LaunchGame {
 
+    // file won't be used much here. It will be passed onto the Game object at the bottom, where it will be needed. 
     LaunchGame(JFrame gameScreen , File file){
         gameScreen.setSize(750 , 750);
         gameScreen.setResizable(false);

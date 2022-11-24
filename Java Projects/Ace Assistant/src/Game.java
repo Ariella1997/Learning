@@ -124,7 +124,7 @@ public class Game implements MouseListener,ActionListener,KeyListener{
                         break ;
                     case "Thought" : 
                         Story.add(i , temp) ; 
-                        Story.add(i + 1 , "Aide") ; 
+                        Story.add(i + 1 , "Alex") ; 
                         Story.add(i + 2 , "(".concat(scanner.nextLine()).concat(")")) ; 
                         i = i + 3  ; 
                         break; 
@@ -137,7 +137,6 @@ public class Game implements MouseListener,ActionListener,KeyListener{
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        System.out.println(Story) ; 
         return Story ;
     }
 
@@ -168,7 +167,7 @@ public class Game implements MouseListener,ActionListener,KeyListener{
             // code on what to do when the timer is not running (the message has finished being written)
             else{
                 // Method that will load a new file when necesary. Mostly will do nothing. 
-                messageUpdater() ; 
+                // messageUpdater() ; 
                 // method for dealing with the display of imagery
                 imageUpdater();
                 // method for changing the music in the game (Not finished yet)
@@ -194,7 +193,6 @@ public class Game implements MouseListener,ActionListener,KeyListener{
         //    case "Load" : 
         //        messageCounter++ ; 
         // }
-
     }
 
     @Override
@@ -262,22 +260,25 @@ public class Game implements MouseListener,ActionListener,KeyListener{
                 visualLayer.add(BubbleHolder , Integer.valueOf(3)) ; 
                 visualLayer.validate(); 
                 visualLayer.repaint();
-                // message.add(messageCounter + 1 , "Remove Bubble") ;
-                // message.add(messageCounter + 1 , "");
-                // message.add(messageCounter + 1, ""); 
                 messageCounter++ ; 
                 break ;
             // Remove Bubble: Reomves the bubble that was previously placed.
             // Removes the most recently added item.
+            // If we added "Remove Bubble" unnaturally (i.e not via TextReader()), we will remove the Remove Bubble text, as it should not be part of the story.(Main example of this is in presenting evidence in EvidenceScreen)
             case "Remove Bubble" :
-                visualLayer.remove(0);
-                visualLayer.validate(); 
-                visualLayer.repaint();
+                    visualLayer.remove(0);
+                    visualLayer.validate(); 
+                    visualLayer.repaint();
+                    if(message.get(messageCounter- 1 ) != ""){
+                        message.remove(messageCounter) ; 
+                        System.out.println(message) ; 
+                    } ; 
+
                 imageUpdater();
                 break ;
         }
     }
-    //Todo: Finish testing this section of code so that we can finally have some audio. 
+    // Todo: Test Temporary case so that we can finally have some audio. 
     // Todo: Create some audio for the game!! (Long term Project)
     // Probably do Repeating (Background music that repeats once it reaches the end) and Temporary (Sound FX that are played once)
     public void musicUpdater() {
@@ -406,7 +407,7 @@ public class Game implements MouseListener,ActionListener,KeyListener{
             textDisplay.setText(textDisplay.getText() + message.get(messageCounter).charAt(characterCounter)) ;
             characterCounter++ ; 
         }
-        // If it has reached the end of the text to be displayed, we remove the timer, and reset the character counter for the next time the methodd is called. 
+        // If it has reached the end of the text to be displayed, we remove the timer, and reset the character counter for the next time the method is called. 
         else{
             timer.stop();
             characterCounter = 0 ; 

@@ -183,6 +183,7 @@ public class EvidenceScreen implements KeyListener,ActionListener{
                     // Gives the focus back the gameScreen, so that we can move the text again with mousePressed / Spacebar
                     game.gameScreen.requestFocusInWindow() ; 
                     break ;
+                // Presents evidence in court. 
                 case 'r' :
                     if(game.textDisplay.getForeground() == Color.GREEN){ 
                         // If timer is running (The witness was still speaking), we stop the timer (Stopping new characters from being added) and reset the characterCounter to 0 (So when we press the mouse again, the game starts reading from the start of the sentence). 
@@ -193,24 +194,21 @@ public class EvidenceScreen implements KeyListener,ActionListener{
                         // Removes the current instance of evidencePanels.
                         game.visualLayer.remove(evidenceImagePanel) ;
                         game.visualLayer.remove(evidenceTextPanel) ;
-                        // Creates a bubble Objection, that will be put onto the screen. This will notify the user that they have presented evidence. Same method as in imageUpdater() from the game Class. We can't add the messsage "Bubble" and "Objection" because then we'd need to call the mousePressed method from here but gameScreen does not gain focus until we break out of this code.
-                        String BubbleName = "Ongoing\\Java Projects\\Ace Assistant\\src\\Bubble\\Objection.png" ;
-                        ImageIcon BubbleIcon = new ImageIcon(BubbleName) ;
-                        JLabel BubbleHolder = new JLabel(BubbleIcon) ;
-                        BubbleHolder.setBounds((int) (game.visualScreen.getWidth()/2 - BubbleIcon.getIconWidth()/2 ) ,(int) (game.visualScreen.getHeight()/2 - BubbleIcon.getIconHeight()/2 ) , BubbleIcon.getIconWidth() , BubbleIcon.getIconHeight() ) ;
-                        game.visualLayer.add(BubbleHolder , Integer.valueOf(3)) ; 
-                        // Repaints the Screen behind
-                        game.visualLayer.validate();
-                        game.visualLayer.repaint();
-                        // Adding a removebubble command. This will be activated once we do a mousePress. Also adding the "", as that would have been added in the TextReader() method.
-                        game.message.add(game.messageCounter + 1 , "Remove Bubble") ;
-                        game.message.add(game.messageCounter + 1 , "");
-                        game.message.add(game.messageCounter + 1, "");
-                        // Since we didn't do a mousePress, we are going to manually set the name and text to empty. 
+                        // Adding an objection bubble, cause that is what the main character is going to bee saying.
+                        game.message.add(game.messageCounter + 1 , "Objection") ; 
+                        game.message.add(game.messageCounter + 1 , "Bubble") ;
+                        // Using the imageUpdater to add the objection bubble to the screen 
+                        game.imageUpdater();
+                        // Removing the newly added command text. (In case we need to traverse this section again.)
+                        game.message.remove(game.messageCounter - 2) ; 
+                        game.message.remove(game.messageCounter - 2) ; 
+                        game.messageCounter = game.messageCounter - 2 ; 
+                        // Adding a removebubble command. Decreementing the button as we've just added a new message so the command will be activated once we do a mousePress. (This remove bubble is an unatural remove bubble and will be removed by the imageUpdater() method when doing the command)
+                        game.message.add(game.messageCounter , "Remove Bubble") ;
+                        game.messageCounter-- ; 
+                        // Since we can't do a mousePress (gameScreen won't have focus until we leave this section of code), we are going to manually set the name and text to empty. 
                         game.characterNameDisplay.setText("");
                         game.textDisplay.setText("") ; 
-                        // Increment the messageCounter, as again, we didn't do the mousePressed method. 
-                        game.messageCounter = game.messageCounter + 2 ; 
                         // Stops the music. Just style effects (Should only stop if the presented evidence was corrrect but that is for another time)
                         game.musicClip.stop();
                         game.musicClip.flush();
