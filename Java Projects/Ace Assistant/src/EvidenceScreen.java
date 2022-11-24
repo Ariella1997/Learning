@@ -156,7 +156,7 @@ public class EvidenceScreen implements KeyListener,ActionListener{
         // Code for when the evidenceImagePanel has focus (i.e no FullImage of the evidence is presented)
         if(evidenceImagePanel.hasFocus()){
             switch(e.getKeyChar()){
-                // Presents the full image of the evidence. Will do nothing otherwise. 
+                // Presents the full image of the evidence if it has one. Will do nothing otherwise. 
                 case 'q' :
                     // Checks for existance of an image that we can use. (Image is placed using the "Add Evidence" from the evidenceUpdater method in the Game object)
                     if(game.evidenceFullImageList.get(4*evidencePageNumber + currentSelectedButton - 1) != null){
@@ -193,8 +193,8 @@ public class EvidenceScreen implements KeyListener,ActionListener{
                         // Removes the current instance of evidencePanels.
                         game.visualLayer.remove(evidenceImagePanel) ;
                         game.visualLayer.remove(evidenceTextPanel) ;
-                        // Creates a bubble Objection, that will be put onto the screen. This will notify the user that they have presented evidence. Same method as in imageUpdater from the game Class. We can't add the messsage "Bubble" and "Objection" because then we'd need to call the mousePressed method from here but gameScreen does not gain focus until we break out of this code.
-                        String BubbleName = "C:\\Users\\Bon-Bon\\Documents\\GitHub\\Main\\src\\Bubble\\Objection.png" ;
+                        // Creates a bubble Objection, that will be put onto the screen. This will notify the user that they have presented evidence. Same method as in imageUpdater() from the game Class. We can't add the messsage "Bubble" and "Objection" because then we'd need to call the mousePressed method from here but gameScreen does not gain focus until we break out of this code.
+                        String BubbleName = "Ongoing\\Java Projects\\Ace Assistant\\src\\Bubble\\Objection.png" ;
                         ImageIcon BubbleIcon = new ImageIcon(BubbleName) ;
                         JLabel BubbleHolder = new JLabel(BubbleIcon) ;
                         BubbleHolder.setBounds((int) (game.visualScreen.getWidth()/2 - BubbleIcon.getIconWidth()/2 ) ,(int) (game.visualScreen.getHeight()/2 - BubbleIcon.getIconHeight()/2 ) , BubbleIcon.getIconWidth() , BubbleIcon.getIconHeight() ) ;
@@ -202,7 +202,7 @@ public class EvidenceScreen implements KeyListener,ActionListener{
                         // Repaints the Screen behind
                         game.visualLayer.validate();
                         game.visualLayer.repaint();
-                        // Adding a removebubble command. This will be activated once we do a mousePress. Also adding the "", as that would have been added in the imageUpdater() method.
+                        // Adding a removebubble command. This will be activated once we do a mousePress. Also adding the "", as that would have been added in the TextReader() method.
                         game.message.add(game.messageCounter + 1 , "Remove Bubble") ;
                         game.message.add(game.messageCounter + 1 , "");
                         game.message.add(game.messageCounter + 1, "");
@@ -211,6 +211,7 @@ public class EvidenceScreen implements KeyListener,ActionListener{
                         game.textDisplay.setText("") ; 
                         // Increment the messageCounter, as again, we didn't do the mousePressed method. 
                         game.messageCounter = game.messageCounter + 2 ; 
+                        // Stops the music. Just style effects (Should only stop if the presented evidence was corrrect but that is for another time)
                         game.musicClip.stop();
                         game.musicClip.flush();
                         // Giving focus back to the screen. 
