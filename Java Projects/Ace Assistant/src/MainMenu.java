@@ -45,9 +45,9 @@ public class MainMenu implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == startButton){
-            // Activates the game, removes the mainMenuButtons first. 
+            // Activates the story selection Screen, removes the mainMenuButtons first. 
             mainMenu.remove(mainMenuButtonHolder) ; 
-            new LaunchGame(mainMenu) ; 
+            new StorySelector(mainMenu) ; 
         }
         else if(e.getSource() == exitButton){
             // Closes the entire program

@@ -5,6 +5,7 @@ import java.awt.BorderLayout ;
 import java.awt.Dimension;
 import javax.swing.BorderFactory ; 
 import java.awt.Color ;
+import java.io.File ; 
 
 // Code that will create the three main sections of the game. 
 // The visual Screen contains all the visuals stuff that the end user will see. 
@@ -14,7 +15,7 @@ import java.awt.Color ;
 
 public class LaunchGame {
 
-    LaunchGame(JFrame gameScreen){
+    LaunchGame(JFrame gameScreen , File file){
         gameScreen.setSize(750 , 750);
         gameScreen.setResizable(false);
         gameScreen.setLayout(new BorderLayout());
@@ -60,7 +61,7 @@ public class LaunchGame {
         // Images won't show up unless we place these two. 
         gameScreen.validate(); 
         gameScreen.repaint();
-        new Game(gameScreen , visualScreen, textScreen , characterScreen) ; 
+        new Game(gameScreen , visualScreen, textScreen , characterScreen , file) ; 
     }
 
 }

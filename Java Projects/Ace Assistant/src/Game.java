@@ -24,7 +24,6 @@ import javax.swing.JPanel;
 
 public class Game implements MouseListener,ActionListener,KeyListener{
 
-    // Todo: Change the absolute path names to relative path names. 
     // Todo: messageUpdater() method, gets a file from a specific path and passes it through TextReader(), and set message to the new file. Will probably need to pass in an integer to symbolise where we started
     // Todo: Write the next section of story. Check game works up until the end. 
 
@@ -61,7 +60,7 @@ public class Game implements MouseListener,ActionListener,KeyListener{
     // Audio stuff
     Clip musicClip ; 
 
-    Game(JFrame oldgameScreen , JPanel oldvisualScreen , JPanel oldtextScreen , JPanel oldcharacterScreen){
+    Game(JFrame oldgameScreen , JPanel oldvisualScreen , JPanel oldtextScreen , JPanel oldcharacterScreen , File file){
 
         // passsing the variables that were given to us from launchgame
         gameScreen = oldgameScreen ;
@@ -100,33 +99,45 @@ public class Game implements MouseListener,ActionListener,KeyListener{
         // Adding the visualLayer onto the screen
         // Activate textReader to fill in the message variable, where all commands will be stored.
         visualScreen.add(visualLayer) ; 
-        message = TextReader() ;
+        message = TextReader(file) ;
 
-    }
-
-    public LinkedList<String> TextReader() {
-        // Todo: An object that will allow the user to select avaliable stories. 
-        // If no file is passed in, we assume we want the start of the game
-        File file = new File("C:\\Users\\Bon-Bon\\Documents\\GitHub\\Main\\src\\StoryTest.txt") ;
-        return TextReader(file) ; 
     }
 
     public LinkedList<String> TextReader(File file) {
-        // If we are given a file, then the textreader will read the text from the file.
         // Will write a command line from the txt file that will give what textfile should be read
-        // Great way to separate the different parts of the story. 
+        // Will use this to separate different story elements. 
         LinkedList<String> Story = new LinkedList<>(); 
         Scanner scanner;
         int i = 0 ; 
         try {
             scanner = new Scanner(file);
             while(scanner.hasNextLine()){
-                Story.add( i , scanner.nextLine() ) ; 
-                i++ ; 
+                String temp = scanner.nextLine() ; 
+                switch(temp){
+                    case "Bubble" : 
+                        Story.add(i , temp) ;
+                        Story.add(i + 1 , scanner.nextLine()) ; 
+                        Story.add(i + 2 , "");
+                        Story.add(i + 3, ""); 
+                        Story.add(i + 4 , "Remove Bubble") ; 
+                        i = i + 5; 
+                        break ;
+                    case "Thought" : 
+                        Story.add(i , temp) ; 
+                        Story.add(i + 1 , "Aide") ; 
+                        Story.add(i + 2 , "(".concat(scanner.nextLine()).concat(")")) ; 
+                        i = i + 3  ; 
+                        break; 
+                    default : 
+                        Story.add( i , temp) ; 
+                        i++ ; 
+                        break ; 
+                }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        System.out.println(Story) ; 
         return Story ;
     }
 
@@ -199,7 +210,7 @@ public class Game implements MouseListener,ActionListener,KeyListener{
             case "Background" : 
                 messageCounter++ ;
                 visualLayer.removeAll() ; 
-                String BackgroundName = "C:\\Users\\Bon-Bon\\Documents\\GitHub\\Main\\src\\Background\\".concat(message.get(messageCounter).concat(".png") ); 
+                String BackgroundName = "Ongoing\\Java Projects\\Ace Assistant\\src\\Background\\".concat(message.get(messageCounter).concat(".png") ); 
                 ImageIcon BackgroundIcon = new ImageIcon(BackgroundName); 
                 JLabel BackgroundHolder = new JLabel(BackgroundIcon);
                 BackgroundHolder.setBounds(0 , 0 , visualScreen.getWidth() , visualScreen.getHeight());
@@ -212,7 +223,7 @@ public class Game implements MouseListener,ActionListener,KeyListener{
             // They are separate to the background. 
             case "Object" :
                 messageCounter++ ; 
-                String ObjectName = "C:\\Users\\Bon-Bon\\Documents\\GitHub\\Main\\src\\Object\\".concat(message.get(messageCounter).concat(".png") );
+                String ObjectName = "Ongoing\\Java Projects\\Ace Assistant\\src\\Object\\".concat(message.get(messageCounter).concat(".png") );
                 ImageIcon ObjectIcon = new ImageIcon(ObjectName);
                 JLabel ObjectHolder = new JLabel(ObjectIcon);
                 ObjectHolder.setBounds(0 , 0, ObjectIcon.getIconWidth() , ObjectIcon.getIconHeight());
@@ -225,7 +236,7 @@ public class Game implements MouseListener,ActionListener,KeyListener{
             // They appear infront of backgrounds, but behind Objects 
             case "Character" :
                 messageCounter++ ;
-                String CharacterName = "C:\\Users\\Bon-Bon\\Documents\\GitHub\\Main\\src\\Character\\".concat(message.get(messageCounter).concat(".png") );
+                String CharacterName = "Ongoing\\Java Projects\\Ace Assistant\\src\\Character\\".concat(message.get(messageCounter).concat(".png") );
                 ImageIcon CharacterIcon = new ImageIcon(CharacterName) ; 
                 JLabel CharacterHolder = new JLabel(CharacterIcon);
                 messageCounter++ ; 
@@ -244,16 +255,16 @@ public class Game implements MouseListener,ActionListener,KeyListener{
             // Elements are added to the message linkedList so that the characterNameDisplay and textDisplay are empty.
             case "Bubble" :
                 messageCounter++ ;
-                String BubbleName = "C:\\Users\\Bon-Bon\\Documents\\GitHub\\Main\\src\\Bubble\\".concat(message.get(messageCounter).concat(".png") );
+                String BubbleName = "Ongoing\\Java Projects\\Ace Assistant\\src\\Bubble\\".concat(message.get(messageCounter).concat(".png") );
                 ImageIcon BubbleIcon = new ImageIcon(BubbleName) ;
                 JLabel BubbleHolder = new JLabel(BubbleIcon) ;
                 BubbleHolder.setBounds((int) (visualScreen.getWidth()/2 - BubbleIcon.getIconWidth()/2 ) ,(int) (visualScreen.getHeight()/2 - BubbleIcon.getIconHeight()/2 ) , BubbleIcon.getIconWidth() , BubbleIcon.getIconHeight() ) ;
                 visualLayer.add(BubbleHolder , Integer.valueOf(3)) ; 
                 visualLayer.validate(); 
                 visualLayer.repaint();
-                message.add(messageCounter + 1 , "Remove Bubble") ;
-                message.add(messageCounter + 1 , "");
-                message.add(messageCounter + 1, ""); 
+                // message.add(messageCounter + 1 , "Remove Bubble") ;
+                // message.add(messageCounter + 1 , "");
+                // message.add(messageCounter + 1, ""); 
                 messageCounter++ ; 
                 break ;
             // Remove Bubble: Reomves the bubble that was previously placed.
@@ -262,12 +273,6 @@ public class Game implements MouseListener,ActionListener,KeyListener{
                 visualLayer.remove(0);
                 visualLayer.validate(); 
                 visualLayer.repaint();
-                message.remove(messageCounter -2);
-                message.remove(messageCounter -2); 
-                message.remove(messageCounter -2);  
-                messageCounter--; 
-                messageCounter--; 
-                messageCounter--; 
                 imageUpdater();
                 break ;
         }
@@ -283,7 +288,7 @@ public class Game implements MouseListener,ActionListener,KeyListener{
                 musicClip.flush();
             }
                 messageCounter++ ; 
-                File musicFile = new File("C:\\Users\\Bon-Bon\\Documents\\GitHub\\Main\\src\\Music\\".concat(message.get(messageCounter).concat(".wav"))) ;
+                File musicFile = new File("Ongoing\\Java Projects\\Ace Assistant\\src\\Music\\".concat(message.get(messageCounter).concat(".wav"))) ;
                 if(musicFile.exists()){
                     AudioInputStream musicAudio;
                     try {
@@ -301,7 +306,7 @@ public class Game implements MouseListener,ActionListener,KeyListener{
                 break ;
             case "Temporary":
                 messageCounter++ ; 
-                File soundFXFile = new File("C:\\Users\\Bon-Bon\\Documents\\GitHub\\Main\\src\\Music\\".concat(message.get(messageCounter).concat(".wav"))) ;
+                File soundFXFile = new File("Ongoing\\Java Projects\\Ace Assistant\\src\\Music\\".concat(message.get(messageCounter).concat(".wav"))) ;
                 if(soundFXFile.exists()){
                     AudioInputStream fXAudio;
                     try {
@@ -330,10 +335,10 @@ public class Game implements MouseListener,ActionListener,KeyListener{
         switch(message.get(messageCounter)){
             case "Add Evidence":
                 messageCounter++ ; 
-                String EvidenceName2 = "C:\\Users\\Bon-Bon\\Documents\\GitHub\\Main\\src\\Evidence(Small)\\".concat(message.get(messageCounter).concat(".png") ); 
+                String EvidenceName2 = "Ongoing\\Java Projects\\Ace Assistant\\src\\Evidence(Small)\\".concat(message.get(messageCounter).concat(".png") ); 
                 ImageIcon EvidenceImageIcon2 = new ImageIcon(EvidenceName2);
                 evidenceImageList.add(evidenceImageList.size() , EvidenceImageIcon2) ;
-                File EvidenceFullImageFile = new File("C:\\Users\\Bon-Bon\\Documents\\GitHub\\Main\\src\\Evidence(Full)\\".concat(message.get(messageCounter).concat(".png"))) ;
+                File EvidenceFullImageFile = new File("Ongoing\\Java Projects\\Ace Assistant\\src\\Evidence(Full)\\".concat(message.get(messageCounter).concat(".png"))) ;
                 if(EvidenceFullImageFile.exists()){
                     ImageIcon EvidenceFullImageIcon = new ImageIcon(EvidenceFullImageFile.getAbsolutePath()) ; 
                     evidenceFullImageList.add(evidenceFullImageList.size() , EvidenceFullImageIcon) ; 
@@ -360,9 +365,6 @@ public class Game implements MouseListener,ActionListener,KeyListener{
                 // we add Aide as the next element in message, so when the code reads for what to put in the characterNameDisplay, we get Alex.
             case "Thought" :
                 textDisplay.setForeground(Color.CYAN);
-                message.add(messageCounter + 1 , "Alex") ; 
-                message.add(messageCounter + 2, "("+message.get(messageCounter + 2) + ")") ; 
-                message.remove(messageCounter +3);
                 messageCounter++ ; 
                 break ;
                 // Whisper: Character is whispering

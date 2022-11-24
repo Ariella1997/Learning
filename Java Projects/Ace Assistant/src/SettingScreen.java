@@ -34,12 +34,11 @@ public class SettingScreen implements ActionListener,KeyListener{
         buttonArray[0] = textSpeedButton ; 
         buttonArray[1] = quitButton ; 
 
-        // Adding ActionCommands to the JButtons. it will match their position in the array.
-        for(int i = 0 ; i < buttonArray.length ; i++){
-            buttonArray[i].setActionCommand(String.valueOf(i)) ; 
-        }
+        // Adding ActionCommands to the JButtons. This matches the names of the variable, and will be used in the actionPerformed method
+        buttonArray[0].setActionCommand("textSpeedButton"); 
+        buttonArray[1].setActionCommand("quitButton") ; 
 
-        // Addding Action Listenerss to the JButtons. 
+        // Addding Action Listeners to the JButtons. 
         for(int i = 0 ; i < buttonArray.length ; i++){
             buttonArray[i].addActionListener(this); 
         }
@@ -79,11 +78,11 @@ public class SettingScreen implements ActionListener,KeyListener{
     public void actionPerformed(ActionEvent e) {
         // Focus is given back to the panel the moment any button would steal focus from the panel. 
         settingScreenPanel.requestFocusInWindow() ; 
-        // We can basically extend this using a switch method. Since we set unique action commands, we can specify what each button should od.
+        // We can basically extend this using a switch method. Since we set unique action commands, we can specify what each button should do.
         switch(e.getActionCommand()){
             // This case is for the textSpeedButton. This will change the speed of the text for us, by changing the timer. If the current delay is half the game starting delay, we set the delay to twice the starting delay. Otherwise, we cut the delay in half. 
-            case "0":
-                // This if statemeent creates a loop, where the timer delay goes STARTING_TIMER_DELAY -> STARTING_TIMER_DELAY /2 -> 2*STARTING_TIMER_DELAY -> STARTING_TIMER_DELAY. STARTING_TIMER_DELAY HAS TO BE A EVEN NUMBER, CHECK GAME TO MAKE SURE THIS IS TRUE
+            case "textSpeedButton":
+                // This if statement creates a loop, where the timer delay goes STARTING_TIMER_DELAY -> STARTING_TIMER_DELAY /2 -> 2*STARTING_TIMER_DELAY -> STARTING_TIMER_DELAY. STARTING_TIMER_DELAY HAS TO BE A EVEN NUMBER, CHECK GAME TO MAKE SURE THIS IS TRUE
                 if(game.timer.getDelay() == game.STARTING_TIMER_DELAY  / 2){
                     game.timer.setDelay(game.STARTING_TIMER_DELAY  * 2);
                 } else{
@@ -92,7 +91,8 @@ public class SettingScreen implements ActionListener,KeyListener{
                 // We call the textSpeedButton and use the textSpeedButtonUpdater to update the text on what the textSpeed is. This should visually show the user that something has happened, and testing in game will cofirm that to them.
                 buttonArray[0].setText(textSpeedButtonUpdater()) ; 
                 break; 
-            case "1":
+                // Todo: Complete this. 
+            case "quitButton":
                 int Answer = JOptionPane.showConfirmDialog(game.gameScreen , "Are you sure you want to exit? All progress will be lost" , "Exit" , JOptionPane.YES_NO_OPTION) ;
                 if(Answer ==0){
                     game.gameScreen.dispose() ; 
