@@ -64,10 +64,10 @@ public class SettingScreen implements ActionListener,KeyListener{
         }
 
         // Adding the Panel and Label to the screen, and repainting for visibility.
-        game.visualLayer.add(settingScreenPanel , Integer.valueOf(3)) ; 
-        game.visualLayer.add(settingScreenLabel, Integer.valueOf(3)) ; 
-        game.visualLayer.validate();
-        game.visualLayer.repaint(); 
+        game.getVisualLayer().add(settingScreenPanel , Integer.valueOf(3)) ; 
+        game.getVisualLayer().add(settingScreenLabel, Integer.valueOf(3)) ; 
+        game.getVisualLayer().validate();
+        game.getVisualLayer().repaint(); 
 
         // Just making sure tha the Panel has the focus at the end of the day.
         settingScreenPanel.requestFocusInWindow() ; 
@@ -80,22 +80,22 @@ public class SettingScreen implements ActionListener,KeyListener{
         settingScreenPanel.requestFocusInWindow() ; 
         // We can basically extend this using a switch method. Since we set unique action commands, we can specify what each button should do.
         switch(e.getActionCommand()){
-            // This case is for the textSpeedButton. This will change the speed of the text for us, by changing the timer. If the current delay is half the game starting delay, we set the delay to twice the starting delay. Otherwise, we cut the delay in half. 
+            // This case is for the textSpeedButton. This will change the speed of the text for us, by changing the getTimer(). If the current delay is half the game starting delay, we set the delay to twice the starting delay. Otherwise, we cut the delay in half. 
             case "textSpeedButton":
-                // This if statement creates a loop, where the timer delay goes STARTING_TIMER_DELAY -> STARTING_TIMER_DELAY /2 -> 2*STARTING_TIMER_DELAY -> STARTING_TIMER_DELAY. STARTING_TIMER_DELAY HAS TO BE A EVEN NUMBER, CHECK GAME TO MAKE SURE THIS IS TRUE
-                if(game.timer.getDelay() == game.STARTING_TIMER_DELAY  / 2){
-                    game.timer.setDelay(game.STARTING_TIMER_DELAY  * 2);
+                // This if statement creates a loop, where the getTimer() delay goes STARTING_TIMER_DELAY -> STARTING_TIMER_DELAY /2 -> 2*STARTING_TIMER_DELAY -> STARTING_TIMER_DELAY. STARTING_TIMER_DELAY HAS TO BE A EVEN NUMBER, CHECK GAME TO MAKE SURE THIS IS TRUE
+                if(game.getTimer().getDelay() == game.STARTING_TIMER_DELAY  / 2){
+                    game.getTimer().setDelay(game.STARTING_TIMER_DELAY  * 2);
                 } else{
-                    game.timer.setDelay(game.timer.getDelay() / 2);
+                    game.getTimer().setDelay(game.getTimer().getDelay() / 2);
                 }
                 // We call the textSpeedButton and use the textSpeedButtonUpdater to update the text on what the textSpeed is. This should visually show the user that something has happened, and testing in game will cofirm that to them.
                 buttonArray[0].setText(textSpeedButtonUpdater()) ; 
                 break; 
                 // Todo: Complete this. 
             case "quitButton":
-                int Answer = JOptionPane.showConfirmDialog(game.gameScreen , "Are you sure you want to exit? All progress will be lost" , "Exit" , JOptionPane.YES_NO_OPTION) ;
+                int Answer = JOptionPane.showConfirmDialog(game.getGameScreen() , "Are you sure you want to exit? All progress will be lost" , "Exit" , JOptionPane.YES_NO_OPTION) ;
                 if(Answer ==0){
-                    game.gameScreen.dispose() ; 
+                    game.getGameScreen().dispose() ; 
                     new MainMenu() ; 
                 }
                 break ; 
@@ -105,11 +105,11 @@ public class SettingScreen implements ActionListener,KeyListener{
 
 
     public String textSpeedButtonUpdater(){
-        // From actionPerformed, we have 3 options for timer Delay (STARTING_TIMER_DELAY , STARTING_TIMER_DELAY /2 or 2*STARTING_TIMER_DELAY). This will check which one was selected, and then return the string that matches the speed to the Adjective "Fast, Slow, Default". 
-        if(game.timer.getDelay() == game.STARTING_TIMER_DELAY){
+        // From actionPerformed, we have 3 options for getTimer() Delay (STARTING_TIMER_DELAY , STARTING_TIMER_DELAY /2 or 2*STARTING_TIMER_DELAY). This will check which one was selected, and then return the string that matches the speed to the Adjective "Fast, Slow, Default". 
+        if(game.getTimer().getDelay() == game.STARTING_TIMER_DELAY){
             return "Game Text Speed : Default" ;
         }
-        else if(game.timer.getDelay() == game.STARTING_TIMER_DELAY / 2){
+        else if(game.getTimer().getDelay() == game.STARTING_TIMER_DELAY / 2){
             return "Game Text Speed : Fast" ; 
             }
         else{
@@ -123,13 +123,13 @@ public class SettingScreen implements ActionListener,KeyListener{
             // Close the setting menu
             case 's' : 
                 // Dispose of all settingPanel andd Labels
-                game.visualLayer.remove(settingScreenPanel) ; 
-                game.visualLayer.remove(settingScreenLabel) ; 
+                game.getVisualLayer().remove(settingScreenPanel) ; 
+                game.getVisualLayer().remove(settingScreenLabel) ; 
                 // Repainting the gameScreen, so visually it is now removed.
-                game.visualLayer.validate() ; 
-                game.visualLayer.repaint(); 
+                game.getVisualLayer().validate() ; 
+                game.getVisualLayer().repaint(); 
                 // returning focus back to the game. 
-                game.gameScreen.requestFocusInWindow() ; 
+                game.getGameScreen().requestFocusInWindow() ; 
         }
         
     }

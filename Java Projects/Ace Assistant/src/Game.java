@@ -21,44 +21,45 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 public class Game implements MouseListener,ActionListener,KeyListener{
-
-    // Todo: messageUpdater() method, gets a file from a specific path and passes it through TextReader(), and set message to the new file. Will probably need to pass in an integer to symbolise where we started
+    
     // Todo: Write the next section of story. Check game works up until the end. 
 
     // messageCounter will fetch a command or text from the message variable
-    int messageCounter = -1 ;
+    private int messageCounter = -1 ;
     // characterCounter will fetch the letters from the text in a message variable.
-    int characterCounter = 0 ;
+    private int characterCounter = 0 ;
     // message will hold a list of command and text to be interpreted by the code
-    LinkedList<String> message = new LinkedList<>();
+    private LinkedList<String> message = new LinkedList<>();
     // visualLayer alllows us to correctly lay the different visual images in the correct order on the visualScreen
-    JLayeredPane visualLayer = new JLayeredPane();
+    private JLayeredPane visualLayer = new JLayeredPane();
     // various items that have been passed to us from the launchGame class
-    JFrame gameScreen = new JFrame() ;
-    JPanel visualScreen = new JPanel() ;
-    JPanel textScreen = new JPanel() ;
-    JPanel characterScreen = new JPanel() ;
+    private JFrame gameScreen = new JFrame() ;
+    private JPanel visualScreen = new JPanel() ;
+    private JPanel textScreen = new JPanel() ;
+    private JPanel characterScreen = new JPanel() ;
     // A JLabel that will display the name of character currently speaking, thinking, whispering, ect.
-    JLabel characterNameDisplay = new JLabel("") ;
+    private JLabel characterNameDisplay = new JLabel("") ;
     // A JLabel that will display what is actually being said, thought, whispered, ect.
     // Here we will have the first ever text that the player will read, telling them how to move forward.
-    JLabel textDisplay = new JLabel("Click to Start or press the SPACEBAR") ;
+    private JTextArea textDisplay = new JTextArea("Click to Start or press the SPACEBAR") ;
     // A timer object that will perform the act of writing the character by incrementing characterCounter
-    Timer timer = new Timer(0 , this ) ;
+    private Timer timer = new Timer(0 , this ) ;
     // An evidenceScreen object that will open things that are in the court record. 
-    EvidenceScreen evidenceScreen ;
-    // List containing icon, text and full images of various evidences. 
-    LinkedList<ImageIcon> evidenceImageList = new LinkedList<>() ; 
-    LinkedList<String> evidenceTextList = new LinkedList<>() ;
-    LinkedList<ImageIcon> evidenceFullImageList = new LinkedList<>() ; 
     // A settingScreeen object that will open up the settings to change/leave the game.
+    EvidenceScreen evidenceScreen ;
     SettingScreen settingScreen ; 
+    // List containing icon, text and full images of various evidences. 
+    private LinkedList<ImageIcon> evidenceImageList = new LinkedList<>() ; 
+    private LinkedList<String> evidenceTextList = new LinkedList<>() ;
+    private LinkedList<ImageIcon> evidenceFullImageList = new LinkedList<>() ; 
     // A final variable used by the SettingScreen. 
     final int STARTING_TIMER_DELAY ; 
     // Audio stuff
-    Clip musicClip ; 
+    private Clip musicClip ; 
+    private int repeat ; 
 
     Game(JFrame oldgameScreen , JPanel oldvisualScreen , JPanel oldtextScreen , JPanel oldcharacterScreen , File file){
 
@@ -68,26 +69,32 @@ public class Game implements MouseListener,ActionListener,KeyListener{
         textScreen = oldtextScreen ;
         characterScreen = oldcharacterScreen ;
         
+        // VisualLayer will handle placing the objects in the correct Z-order
         // visualLayer will have no Layout manager, Images are placed by setBounds method. 
         // most images will be done through the imageUpdater() method. (Not all)
         // visualLayer will match cover the entire visualScreen.
         visualScreen.setLayout(null) ; 
         visualLayer.setBounds(0 , 0 ,visualScreen.getWidth() , visualScreen.getHeight()) ;
 
-        // sets the speed at which the text should appear one after the other. If you want to change the overall text Delay, do it here on the first line. 
+        // sets the speed at which the text should appear one after the other. If you want to change the overall text Delay, do it here on the first line. (see actionperformed)
         // Increase for slower text speed, Decrease for Faster text speed
         // STARTING_TIMER_DELAY will be used for SettingScreen (We must pass STARTING_TIMER_DELAY as an even number.)
         timer.setDelay(10);
         STARTING_TIMER_DELAY = 2*timer.getDelay() ; 
         timer.setDelay(STARTING_TIMER_DELAY) ; 
 
-        // Setting starting colours for the character's name and what they will be saying. 
-        // textDisplay will be set to the top of the JLabel for added space.
+        // Various settings for what the textDisplay will look like. 
         characterNameDisplay.setForeground(Color.WHITE);
         textDisplay.setForeground(Color.WHITE);
-        textDisplay.setVerticalAlignment(JLabel.TOP);
+        textDisplay.setLineWrap(true);
+        textDisplay.setWrapStyleWord(true);
+        textDisplay.setOpaque(false);
+        textDisplay.setBorder(null) ; 
+        textDisplay.setEditable(false);
+        textDisplay.setFocusable(false);
+        textDisplay.setFont(characterNameDisplay.getFont()) ; 
 
-        // Adding the various JLabels and JLayeredPane to the code
+        // Adding the various displays to the code
         // We also add in mouseListener to users can move the text forward
         characterScreen.add(characterNameDisplay) ; 
         textScreen.add(textDisplay) ; 
@@ -99,7 +106,9 @@ public class Game implements MouseListener,ActionListener,KeyListener{
         // Adding the visualLayer onto the screen
         // Activate textReader to fill in the message variable, where all commands will be stored.
         visualScreen.add(visualLayer) ; 
-        message = TextReader(file) ;
+        // message = TextReader(file) ;
+        File testfile = new File("Ongoing\\Java Projects\\Ace Assistant\\src\\Testimony1.txt") ; 
+        message = TextReader(testfile) ; 
 
     }
 
@@ -127,7 +136,13 @@ public class Game implements MouseListener,ActionListener,KeyListener{
                         Story.add(i + 1 , "Alex") ; 
                         Story.add(i + 2 , "(".concat(scanner.nextLine()).concat(")")) ; 
                         i = i + 3  ; 
-                        break; 
+                        break;
+                    case "TestimonyTitle" : 
+                        Story.add(i , temp) ; 
+                        Story.add(i + 1 , "") ; 
+                        Story.add(i + 2 ,"-- ".concat(scanner.nextLine()).concat(" --") ) ; 
+                        i = i + 3  ;
+                        break ;  
                     default : 
                         Story.add( i , temp) ; 
                         i++ ; 
@@ -167,11 +182,13 @@ public class Game implements MouseListener,ActionListener,KeyListener{
             // code on what to do when the timer is not running (the message has finished being written)
             else{
                 // Method that will load a new file when necesary. Mostly will do nothing. 
-                // messageUpdater() ; 
+                messageUpdater() ; 
                 // method for dealing with the display of imagery
                 imageUpdater();
-                // method for changing the music in the game (Not finished yet)
-                musicUpdater() ; 
+                visualLayer.validate(); 
+                visualLayer.repaint();
+                // method for changing the audio in the game (Not finished yet)
+                audioUpdater() ; 
                 // method for dealing with the allocation of evidence into the three evidenceLists. (Image, Text and FullImage)
                 evidenceUpdater() ; 
                 // method for the formatting of text in the textDisplay
@@ -189,10 +206,32 @@ public class Game implements MouseListener,ActionListener,KeyListener{
     }
 
     public void messageUpdater() {
-        // switch(message.get(messageCounter)){
-        //    case "Load" : 
-        //        messageCounter++ ; 
-        // }
+        messageCounter++ ; 
+        switch(message.get(messageCounter )){
+            // Load: Will load the next file in the story. File name will be written at the next message. Message will normally end here. 
+           case "Load" : 
+               messageCounter++ ; 
+               File file = new File("Ongoing\\Java Projects\\Ace Assistant\\src\\".concat(message.get(messageCounter)).concat(".txt")) ; 
+               if(file.exists()){
+                    // Set the message to the commands written in the new textfile, and reset the messageCounter. 
+                    message = TextReader(file) ; 
+                    messageCounter = 0 ; 
+               }
+               else{
+                // Debug. We can remove this else statement. 
+                System.out.println("File existance: " +file.exists());
+               }
+               // Let's us know that the program is expected to start looping the commands from the next line onwards.
+               // Todo: Maybe also save the state of the visual stuff? Then we can load that rather than have to call in the visuals commands in the text file.
+            case "Start Repeat" : 
+                messageCounter++ ; 
+                repeat = messageCounter ; 
+                messageCounter++ ; 
+               // Executes the loop, bringing us back to where the start look was placed. 
+            case "End Repeat" : 
+               messageCounter = repeat ; 
+        }
+        messageCounter-- ; 
     }
 
     @Override
@@ -212,9 +251,7 @@ public class Game implements MouseListener,ActionListener,KeyListener{
                 ImageIcon BackgroundIcon = new ImageIcon(BackgroundName); 
                 JLabel BackgroundHolder = new JLabel(BackgroundIcon);
                 BackgroundHolder.setBounds(0 , 0 , visualScreen.getWidth() , visualScreen.getHeight());
-                visualLayer.add(BackgroundHolder , Integer.valueOf(0)); 
-                visualLayer.validate(); 
-                visualLayer.repaint();
+                visualLayer.add(BackgroundHolder , Integer.valueOf(0));
                 imageUpdater();
                 break ;
             // Objects: These are items that appear infront of the characters.
@@ -226,8 +263,6 @@ public class Game implements MouseListener,ActionListener,KeyListener{
                 JLabel ObjectHolder = new JLabel(ObjectIcon);
                 ObjectHolder.setBounds(0 , 0, ObjectIcon.getIconWidth() , ObjectIcon.getIconHeight());
                 visualLayer.add(ObjectHolder , Integer.valueOf(2)); 
-                visualLayer.validate(); 
-                visualLayer.repaint();
                 imageUpdater();
                 break; 
             // Characters: These are the actual characters to be displayed. 
@@ -243,8 +278,6 @@ public class Game implements MouseListener,ActionListener,KeyListener{
                 int yposition = Integer.valueOf(message.get(messageCounter)) ; 
                 CharacterHolder.setBounds(xposition , yposition , CharacterIcon.getIconWidth() , CharacterIcon.getIconHeight()) ;
                 visualLayer.add(CharacterHolder , Integer.valueOf(1)) ;
-                visualLayer.validate();
-                visualLayer.repaint();
                 imageUpdater();
                 break;
             // Bubble: Places a bubble speech above all other images, that is removed at the end of the next mouseclick by Remove Bubble case
@@ -258,8 +291,6 @@ public class Game implements MouseListener,ActionListener,KeyListener{
                 JLabel BubbleHolder = new JLabel(BubbleIcon) ;
                 BubbleHolder.setBounds((int) (visualScreen.getWidth()/2 - BubbleIcon.getIconWidth()/2 ) ,(int) (visualScreen.getHeight()/2 - BubbleIcon.getIconHeight()/2 ) , BubbleIcon.getIconWidth() , BubbleIcon.getIconHeight() ) ;
                 visualLayer.add(BubbleHolder , Integer.valueOf(3)) ; 
-                visualLayer.validate(); 
-                visualLayer.repaint();
                 messageCounter++ ; 
                 break ;
             // Remove Bubble: Reomves the bubble that was previously placed.
@@ -267,13 +298,9 @@ public class Game implements MouseListener,ActionListener,KeyListener{
             // If we added "Remove Bubble" unnaturally (i.e not via TextReader()), we will remove the Remove Bubble text, as it should not be part of the story.(Main example of this is in presenting evidence in EvidenceScreen)
             case "Remove Bubble" :
                     visualLayer.remove(0);
-                    visualLayer.validate(); 
-                    visualLayer.repaint();
                     if(message.get(messageCounter- 1 ) != ""){
                         message.remove(messageCounter) ; 
-                        System.out.println(message) ; 
                     } ; 
-
                 imageUpdater();
                 break ;
         }
@@ -281,7 +308,7 @@ public class Game implements MouseListener,ActionListener,KeyListener{
     // Todo: Test Temporary case so that we can finally have some audio. 
     // Todo: Create some audio for the game!! (Long term Project)
     // Probably do Repeating (Background music that repeats once it reaches the end) and Temporary (Sound FX that are played once)
-    public void musicUpdater() {
+    public void audioUpdater() {
         switch(message.get(messageCounter)){
             case "Repeating" :
             if(musicClip != null){
@@ -363,7 +390,7 @@ public class Game implements MouseListener,ActionListener,KeyListener{
     public void formatUpdater() {
         switch(message.get(messageCounter)){
                 // Thought: Main characters thinking.
-                // we add Aide as the next element in message, so when the code reads for what to put in the characterNameDisplay, we get Alex.
+                // Text will be in blue. 
             case "Thought" :
                 textDisplay.setForeground(Color.CYAN);
                 messageCounter++ ; 
@@ -380,6 +407,10 @@ public class Game implements MouseListener,ActionListener,KeyListener{
             // Todo: Display LifePoints when the text is green. So probably do it here.
             case "Testimony" :
                 textDisplay.setForeground(Color.GREEN);
+                messageCounter++ ; 
+                break ; 
+            case "TestimonyTitle" : 
+                textDisplay.setForeground(Color.RED);
                 messageCounter++ ; 
                 break ; 
             default :
@@ -449,6 +480,65 @@ public class Game implements MouseListener,ActionListener,KeyListener{
     @Override
     public void keyReleased(KeyEvent e) {
     }
+
+    // Get and Set methods that are used in other classes. 
+
+    public JLayeredPane getVisualLayer(){
+        return visualLayer ; 
+    }
+
+    public Timer getTimer(){
+        return timer ; 
+    }
+
+    public JFrame getGameScreen(){
+        return gameScreen ; 
+    }
+
+    public JPanel getVisualScreen(){
+        return visualScreen ; 
+    }
+
+    public LinkedList<ImageIcon> getEvidenceImageList(){
+        return evidenceImageList ; 
+    }
+
+    public LinkedList<ImageIcon> getEvidenceFullImageList(){
+        return evidenceFullImageList ; 
+    }
+
+    public LinkedList<String> getEvidenceTextList(){
+        return evidenceTextList ; 
+    }
+
+    public JTextArea getTextDisplay(){
+        return textDisplay ; 
+    }
+
+    public int getMessageCounter(){
+        return messageCounter ; 
+    }
+
+    public LinkedList<String> getMessage(){
+        return message ; 
+    }
+
+    public JLabel getCharacterNameDisplay(){
+        return characterNameDisplay ; 
+    }
+
+    public Clip getMusicClip(){
+        return musicClip ; 
+    }
+
+    public void setMessageCounter(int i ){
+        messageCounter = i ; 
+    }
+
+    public void setCharacterCounter(int i){
+        characterCounter = i ; 
+    }
+
 
 }
 

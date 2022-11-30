@@ -19,7 +19,7 @@ public class StorySelector implements ActionListener{
         StorySelector = mainMenu ; 
 
         // Various JButton, with text representing the various stories we can go with
-        JButton testbutton = new JButton("Test") ; 
+        JButton testbutton = new JButton("Tutorial") ; 
         JButton button1 = new JButton("1") ; 
         JButton button2 = new JButton("2") ; 
         JButton button3 = new JButton("3") ; 
