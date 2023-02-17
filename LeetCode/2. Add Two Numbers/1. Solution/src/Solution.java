@@ -2,6 +2,9 @@ public class Solution {
 
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
 
+        /* You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.
+        You may assume the two numbers do not contain any leading zero, except the number 0 itself. */
+
         return Reverser(Addition(l1 , l2 , 0 , new ListNode() )) ; 
 
     }
@@ -27,7 +30,7 @@ public class Solution {
         else{
             int val = carriedOver + l1.val + l2.val ;
             // We now recursively call the method. 
-            // We remove the values of the listNodes, (As we just did the calculation using those values)
+            // We use the next ListNode for each ListNode (As we just did the calculation using those values)
             // we use the carriedOverValue method to calculate the carriedOver for the next recursion
             // To stop us from having val that are greater than 10, we decrement val by 10*carriedOverValue 
             return Addition(l1.next , l2.next, CarriedOverValue(val) , new ListNode(val - 10*CarriedOverValue(val)  , store )) ; 
@@ -35,15 +38,11 @@ public class Solution {
     }
 
     private int CarriedOverValue(int value){
-        // If the value is 2-digit number, we need to carry the 1 over, and decrement the val by 10. 
-        if(value > 9){
-            return 1 ; 
-        }
-        // If the value is 1-digit number, we do not need carry over any value or decrement val by 10
-        // Both of the above can be done using the number 0, as it's only called at the end of Addition() method
-        else{
-            return 0 ; 
-        }
+        // This method retuns 0 for numbers less than 10, and 1 for numbers greater than 10, but less than 20
+        // The addition of two single positive digit numbers is always less than 19. If we carry over 1, the answer is always less than 20. 
+        // The addition of two single positive digit numbers is always greater than -1. 
+        // So we only need this to work for 0-19. 
+        return (value - value%10)/10 ; 
     }
     
     // The reverser method takes a listNode and reverses the order of the ListNode 

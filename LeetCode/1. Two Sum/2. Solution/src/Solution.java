@@ -9,25 +9,27 @@ public class Solution {
     */
     
     public int[] twoSum(int[] nums, int target) {
-        return Answer(nums , target , 0 , new HashMap<>()) ; 
-    }
 
-    private int[] Answer(int[] nums, int target, int index, HashMap<Integer,Integer> map){
+        // HashMap will store values that we pass through
+        HashMap<Integer,Integer> map= new HashMap<>() ;
+        // solution will hold our solution 
+        int[] solution = new int[2] ;  
 
-        if(map.containsKey(nums[index])){
-            // If HashMap does have the key, then it means we have two numbers that add to the target
-            // The first index will be stored in the map, with the key beign nums[index]
-            // The second index is our index counter.
-            int[] solution = {map.get(nums[index]) , index} ; 
-            return solution ; 
+        // Iterate over the array
+        for(int i = 0 ; i < nums.length ; i++){
+            // If we do have a matching key, we place the index of the key and the current index into the solution, and break from the loop
+            if(map.containsKey(nums[i])){
+                solution[0] = map.get(nums[i]); 
+                solution[1] = i ; 
+                break ; 
+            }
+            // If we have not seen the necessary number, we place the required number as the key and the index as the value into the HashMap
+            else{
+                map.put(target - nums[i] , i) ; 
+            }
         }
-        else{
-            // If HashMap does not have the key, then we do not have two numbers that add up to target yet
-            // We store the difference between the target and the number at nums[index], and place the index as value if we need to get it
-            map.put(target - nums[index] , index) ; 
-            // We can use a recursive call, incrementing the index. 
-            return Answer(nums , target, index + 1 , map) ; 
-        }
-    }
-    
+
+        return solution ; 
+
+    }   
 }
