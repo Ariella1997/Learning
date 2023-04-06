@@ -1,4 +1,4 @@
-The AdapterPattern allows us to enable objects with incompatible interfaces to work together. 
+The Adapter Pattern allows us to enable objects with incompatible interfaces to work together. 
 
 Steps 
 
